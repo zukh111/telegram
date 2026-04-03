@@ -1,0 +1,114 @@
+# Ilmla Bot — Ishga Tushirish Qo'llanmasi
+
+## 1. O'rnatish
+
+```bash
+# Python 3.10+ kerak
+python -m venv venv
+source venv/bin/activate        # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+## 2. Bot tokenini olish
+
+1. Telegramda @BotFather ga yozing
+2. /newbot buyrug'ini yuboring
+3. Bot nomini kiriting: `Ilmla Bot`
+4. Username kiriting: `ilmla_edu_bot` (yoki boshqa)
+5. Olingan tokenni `bot.py` dagi `BOT_TOKEN` ga qo'ying
+
+## 3. Owner ID ni aniqlash
+
+@userinfobot ga /start yuboring — u sizning ID raqamingizni ko'rsatadi.
+Uni `bot.py` dagi `OWNER_ID` ga qo'ying.
+
+## 4. Admin ma'lumotlarini yangilash
+
+`bot.py` faylida `ADMIN_INFO` qismini o'zgartiring:
+
+```python
+ADMIN_INFO = {
+    "name":     "Ismingiz",
+    "phone":    "+998 XX XXX XX XX",
+    "telegram": "@username",
+    "address":  "Manzil",
+    "hours":    "Ish vaqti",
+}
+```
+
+## 5. Botni ishga tushirish
+
+```bash
+python bot.py
+```
+
+## 6. Serverda doimiy ishlatish (Linux)
+
+```bash
+# systemd service yaratish
+sudo nano /etc/systemd/system/ilmla_bot.service
+```
+
+```ini
+[Unit]
+Description=Ilmla Telegram Bot
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/ilmla_bot
+ExecStart=/home/ubuntu/ilmla_bot/venv/bin/python bot.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable ilmla_bot
+sudo systemctl start ilmla_bot
+sudo systemctl status ilmla_bot
+```
+
+## 7. FAQ qo'shish
+
+Admin sifatida botga:
+```
+/addfaq Savol matni | Javob matni
+```
+
+## 8. Loglarni ko'rish
+
+```bash
+tail -f ilmla_bot.log
+```
+
+---
+
+## Bot imkoniyatlari
+
+| Foydalanuvchi | Admin |
+|---|---|
+| Ro'yxatdan o'tish | Statistika |
+| Kurslar haqida | O'quvchilar ro'yxati |
+| FAQ | Broadcast xabar |
+| Admin bilan bog'lanish | FAQ boshqaruv |
+
+## Ikkinchi bot bilan ulash (notifications)
+
+Agar xabarlarni boshqa botga yubormoqchi bo'lsangiz, `bot.py`ning oxirida:
+
+```python
+SECOND_BOT_TOKEN = "IKKINCHI_BOT_TOKENI"
+SECOND_BOT_CHAT_ID = -100xxxxxxxxx  # kanal yoki guruh ID
+
+# bot.send_message() o'rniga:
+import httpx
+httpx.post(
+    f"https://api.telegram.org/bot{SECOND_BOT_TOKEN}/sendMessage",
+    json={"chat_id": SECOND_BOT_CHAT_ID, "text": "...", "parse_mode": "Markdown"}
+)
+```
