@@ -27,7 +27,8 @@ from telegram.ext import (
 # ──────────────────────────────────────────────
 #  CONFIG  —  BULARNI O'ZGARTIRING
 # ──────────────────────────────────────────────
-BOT_TOKEN = "8780819051:AAFAAU_Laq67yUaFyq3HLtOsE8yKekR_wtk"          # @BotFather dan oling
+import os
+BOT_TOKEN = os.getenv("BOT_TOKEN")      # @BotFather dan oling
 OWNER_ID  = 6702104500                      # Sizning Telegram ID raqamingiz
 
 ADMIN_INFO = {
